@@ -42,12 +42,26 @@ class RoleController extends Controller
             'title' => 'required'
         ]);
         try {
-            Role::findOrFail($id)->update([
+            $role = Role::findOrFail($id)->update([
                 'title' => $request->title
             ]);
-            return to_route('roles.index')->with('success', 'The Role Successfully Created');
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'The role is successfully updated'
+                ]);
+            } else {
+                return to_route('roles.index')->with('success', 'The Role Successfully Updated');
+            }
         } catch (Exception $e) {
-            return to_route('roles.index')->with('error', $e->getMessage());
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => $e->getMessage()
+                ]);
+            } else {
+                return to_route('roles.index')->with('error', $e->getMessage());
+            }
         }
     }
 

@@ -40,7 +40,7 @@
                                         <td>{{ $role->updated_at }}</td>
                                         <td>
                                             <a class="btn btn-success" href="{{ route('roles.edit', $role->id) }}">Edit</a>
-                                            <button type="button" class="btn btn-tool btn-primary bg-primary"
+                                            <button type="button" class="btn btn-primary"
                                                 onclick="editRole('{{ $role->id }}','{{ $role->title }}')">
                                                 Edit Modal
                                             </button>
@@ -58,22 +58,53 @@
     </div>
     @include('roles.partials.create')
     @include('roles.partials.edit')
-    <script>
-        // $(document).ready(function() {
-        //     $(document).on('submit', 'form#form_role_edit', function(e) {
-        //         e.preventDefault();
-        //         let url = "{{ route('roles.update', ':id') }}"
-        //         console.log("url", url)
-        //     })
-        // });
-
-        function editRole(id, title) {
-            console.log(id, title)
-            let form = $('form#form_role_edit')
-            let title = form.find('input[name=title]')
-            console.log(title)
-        }
-    </script>
 @endsection
 @push('js')
+    <script>
+        $(document).ready(function() {
+            $(document).on('submit', 'form#form_role_edit', function(e) {
+                e.preventDefault();
+                let form = $(this);
+                let action = form.attr('action');
+                let token = form.find('input[name=_token]').val();
+                let title = form.find('input[name=title]').val();
+                $.ajax({
+                    url: action,
+                    method: 'post',
+                    data: {
+                        title: title,
+                        _token: token,
+                    }
+                }).done(function(data) {
+                    $('#roleEdit').modal('hide');
+                    if (data.status) {
+                        showAlertMessage(data.message, 5000, 'success');
+                    }
+                    setTimeout(() => {
+                        window.location.href = "{{ route('roles.index') }}"
+                    }, 5000);
+                }).fail(function(data) {
+                    $('#roleEdit').modal('hide');
+                    let errors = JSON.parse(data.responseText);
+                    if (errors && errors.message) {
+                        showAlertMessage(errors.message, 5000, 'error');
+                    } else {
+                        showAlertMessage(errors.message, 5000, 'error');
+                    }
+                    setTimeout(() => {
+                        window.location.href = "{{ route('roles.index') }}"
+                    }, 5000);
+                });
+            })
+
+        });
+
+        function editRole(id, title) {
+            let url = "{{ route('roles.update', ':id') }}"
+            url = url.replace(':id', `${id}`);
+            $('#form_role_edit input[name=title]').val(title);
+            $('#form_role_edit').attr('action', url);
+            $('#roleEdit').modal('show');
+        }
+    </script>
 @endpush
