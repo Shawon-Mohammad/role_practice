@@ -41,13 +41,17 @@
                                         <td>{{ $user->created_at }}</td>
                                         <td>{{ $user->updated_at }}</td>
                                         <td>
-                                            <a class="btn btn-success" href="{{ route('user.edit', $user->id) }}">Edit</a>
-                                            <button type="button" class="btn btn-tool btn-primary bg-primary"
-                                                onclick="editUser('{{ $user->title }}','{{ $user->id }}')">
-                                                Edit Modal
-                                            </button>
-                                            <a class="btn btn-danger"
-                                                href="{{ route('user.delete', $user->id) }}">Delete</a>
+                                            @can('edit_user')
+                                                <a class="btn btn-success" href="{{ route('user.edit', $user->id) }}">Edit</a>
+                                                <button type="button" class="btn btn-tool btn-primary bg-primary"
+                                                    onclick="editUser('{{ $user->id }}','{{ $user->name }}','{{ $user->email }}')">
+                                                    Edit Modal
+                                                </button>
+                                            @endcan
+                                            @can('delete_user')
+                                                <a class="btn btn-danger"
+                                                    href="{{ route('user.delete', $user->id) }}">Delete</a>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach
@@ -56,7 +60,7 @@
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
     </div>
     @include('user.partials.create')
     @include('user.partials.edit')
@@ -66,16 +70,50 @@
         $(document).ready(function() {
             $(document).on('submit', 'form#form_user_edit', function(e) {
                 e.preventDefault();
-                let url = "{{ route('user.update', ':id') }}"
-                console.log("url", url)
+                let form = $(this);
+                let action = form.attr('action');
+                let token = form.find('input[name=_token]').val();
+                let name = form.find('input[name=name]').val();
+                let email = form.find('input[name=email]').val();
+                $.ajax({
+                    url: action,
+                    method: 'post',
+                    data: {
+                        name: name,
+                        email: email,
+                        _token: token,
+                    }
+                }).done(function(data) {
+                    $('#userEdit').modal('hide');
+                    if (data.status) {
+                        showAlertMessage(data.message, 5000, 'success');
+                    }
+                    setTimeout(() => {
+                        window.location.href = "{{ route('user.index') }}"
+                    }, 5000);
+                }).fail(function(data) {
+                    $('#userEdit').modal('hide');
+                    let errors = JSON.parse(data.responseText);
+                    if (errors && errors.message) {
+                        showAlertMessage(errors.message, 5000, 'error');
+                    } else {
+                        showAlertMessage(errors.message, 5000, 'error');
+                    }
+                    setTimeout(() => {
+                        window.location.href = "{{ route('user.index') }}"
+                    }, 5000);
+                });
             })
+
         });
 
-        function editUser(title, id) {
-            console.log(title, id)
-            let form = $('form#form_user_edit')
-            let title = form.find('input[name=title]')
-            console.log(title)
+        function editUser(id, name, email) {
+            let url = "{{ route('user.update', ':id') }}"
+            url = url.replace(':id', `${id}`);
+            $('#form_user_edit input[name=name]').val(name);
+            $('#form_user_edit input[name=email]').val(email);
+            $('#form_user_edit').attr('action', url);
+            $('#userEdit').modal('show');
         }
     </script>
 @endpush

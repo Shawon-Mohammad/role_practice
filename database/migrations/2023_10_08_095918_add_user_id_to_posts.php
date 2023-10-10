@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('role_user', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('role_id')->nullable();
+        Schema::table('posts', function (Blueprint $table) {
+            $table->unsignedBigInteger('user_id')->after('body');
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('role_user');
+        Schema::table('posts', function (Blueprint $table) {
+            //
+        });
     }
 };

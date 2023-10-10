@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Permission;
 use App\Models\Role;
 use Exception;
 use Illuminate\Http\Request;
@@ -31,10 +32,13 @@ class RoleController extends Controller
             return to_route('roles.index')->with('error', $e->getMessage());
         }
     }
-    function edit($data)
+    function edit($id)
     {
-        $role = Role::findOrFail($data);
-        return view("roles.edit", compact('role'));
+        $this->authorize('add_role', 'edit_role', 'view_role','delete_role');
+
+        $data['role'] = Role::findOrFail($id);
+        $data['permissions'] = Permission::all();
+        return view("roles.edit", $data);
     }
     function update(Request $request, $id)
     {
@@ -43,8 +47,11 @@ class RoleController extends Controller
         ]);
         try {
             $role = Role::findOrFail($id)->update([
-                'title' => $request->title
+                'title' => $request->title,
+                'user_id' => auth()->id()
             ]);
+            $role = Role::find($id);
+            $role->permissions()->sync($request->permissions);
             if ($request->ajax()) {
                 return response()->json([
                     'status' => 1,

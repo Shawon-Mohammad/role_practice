@@ -39,13 +39,17 @@
                                         <td>{{ $role->created_at }}</td>
                                         <td>{{ $role->updated_at }}</td>
                                         <td>
-                                            <a class="btn btn-success" href="{{ route('roles.edit', $role->id) }}">Edit</a>
-                                            <button type="button" class="btn btn-primary"
-                                                onclick="editRole('{{ $role->id }}','{{ $role->title }}')">
-                                                Edit Modal
-                                            </button>
-                                            <a class="btn btn-danger"
-                                                href="{{ route('roles.delete', $role->id) }}">Delete</a>
+                                            @can('edit_role')
+                                                <a class="btn btn-success" href="{{ route('roles.edit', $role->id) }}">Edit</a>
+                                                <button type="button" class="btn btn-primary"
+                                                    onclick="editRole('{{ $role->id }}','{{ $role->title }}')">
+                                                    Edit Modal
+                                                </button>
+                                            @endcan
+                                            @can('delete_role')
+                                                <a class="btn btn-danger"
+                                                    href="{{ route('roles.delete', $role->id) }}">Delete</a>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach

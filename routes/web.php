@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -42,6 +43,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/permissions/edit/{data}', [PermissionController::class, 'edit'])->name('permissions.edit');
     Route::post('/permissions/update/{data}', [PermissionController::class, 'update'])->name('permissions.update');
     Route::get('/permissions/delete/{data}', [PermissionController::class, 'delete'])->name('permissions.delete');
+
+    Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts/store', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/edit/{data}', [PostController::class, 'edit'])->name('posts.edit');
+    Route::post('/posts/update/{data}', [PostController::class, 'update'])->name('posts.update');
+    Route::get('/posts/delete/{data}', [PostController::class, 'delete'])->name('posts.delete');
+    Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');

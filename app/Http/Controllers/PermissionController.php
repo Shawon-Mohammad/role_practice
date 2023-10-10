@@ -33,6 +33,7 @@ class PermissionController extends Controller
     }
     function edit($data)
     {
+        
         $permission = Permission::findOrFail($data);
         return view("permissions.edit", compact('permission'));
     }
@@ -42,14 +43,30 @@ class PermissionController extends Controller
             'title' => 'required'
         ]);
         try {
-            $permission = Permission::findOrFail($id)->update([
-                'title' => $request->title
+            $Permission = Permission::findOrFail($id)->update([
+                'title' => $request->title,
+                'user_id' => auth()->id()
             ]);
-            return to_route('permissions.index')->with('success', 'The Permission Successfully Created');
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'The permission is successfully updated'
+                ]);
+            } else {
+                return to_route('permissions.index')->with('success', 'The Permission Successfully Updated');
+            }
         } catch (Exception $e) {
-            return to_route('permissions.index')->with('error', $e->getMessage());
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => $e->getMessage()
+                ]);
+            } else {
+                return to_route('permissions.index')->with('error', $e->getMessage());
+            }
         }
     }
+
     function delete($data)
     {
         try {

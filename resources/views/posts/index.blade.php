@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-    Permission
+    Post
 @endsection
 @section('content')
     <div class="container-fluid">
@@ -8,15 +8,15 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header border-0 bg-info">
-                        <h3 class="card-title">Permissions</h3>
+                        <h3 class="card-title">Posts</h3>
                         <div class="card-tools">
-                            <a href="{{ route('permissions.create') }}" class="btn btn-tool btn-primary bg-primary">
+                            <a href="{{ route('posts.create') }}" class="btn btn-tool btn-primary bg-primary">
                                 <i class="fas fa-plus"></i>Add New
                             </a>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-tool btn-primary bg-primary" data-toggle="modal"
-                                data-target="#permissionCreate">
-                                Add New Permission modal
+                                data-target="#postCreate">
+                                Add New Post modal
                             </button>
                         </div>
                     </div>
@@ -26,31 +26,38 @@
                                 <tr>
                                     <th>Id</th>
                                     <th>Title</th>
+                                    <th>Body</th>
+                                    <th>Status</th>
                                     <th>Created at</th>
                                     <th>Updated at</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($permissions as $permission)
+                                @foreach ($posts as $post)
                                     <tr>
-                                        <td>{{ $permission->id }}</td>
-                                        <td>{{ $permission->title }}</td>
-                                        <td>{{ $permission->created_at }}</td>
-                                        <td>{{ $permission->updated_at }}</td>
+                                        <td>{{ $post->id }}</td>
+                                        <td>{{ $post->title }}</td>
+                                        <td>{{ $post->body }}</td>
+                                        <td>{{ $post->status }}</td>
+                                        <td>{{ $post->created_at }}</td>
+                                        <td>{{ $post->updated_at }}</td>
                                         <td>
-                                            @can(edit_permission)
-                                                <a class="btn btn-success"
-                                                    href="{{ route('permissions.edit', $permission->id) }}">Edit</a>
-                                                <button type="button" class="btn btn-tool btn-primary bg-primary"
-                                                    onclick="editPermission('{{ $permission->id }}','{{ $permission->title }}')">
+                                            @can('view_post')
+                                                <a class="btn btn-dark" href="{{ route('posts.show', $post->id) }}">View</a>
+                                            @endcan
+                                            @can('edit_post')
+                                                <button type="button" class="btn btn-primary"
+                                                    onclick="editPost('{{ $post->id }}','{{ $post->title }}')">
                                                     Edit Modal
                                                 </button>
+                                                <a class="btn btn-success" href="{{ route('posts.edit', $post->id) }}">Edit</a>
                                             @endcan
-                                            @can(delete_permission)
+                                            @can('delete_post')
                                                 <a class="btn btn-danger"
-                                                    href="{{ route('permissions.delete', $permission->id) }}">Delete</a>
+                                                    href="{{ route('posts.delete', $post->id) }}">Delete</a>
                                             @endcan
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -61,13 +68,13 @@
             </div>
         </div>
     </div>
-    @include('permissions.partials.edit')
-    @include('permissions.partials.create')
+    @include('posts.partials.create')
+    @include('posts.partials.edit')
 @endsection
 @push('js')
     <script>
         $(document).ready(function() {
-            $(document).on('submit', 'form#form_permission_edit', function(e) {
+            $(document).on('submit', 'form#form_post_edit', function(e) {
                 e.preventDefault();
                 let form = $(this);
                 let action = form.attr('action');
@@ -81,15 +88,15 @@
                         _token: token,
                     }
                 }).done(function(data) {
-                    $('#permissionEdit').modal('hide');
+                    $('#postEdit').modal('hide');
                     if (data.status) {
                         showAlertMessage(data.message, 5000, 'success');
                     }
                     setTimeout(() => {
-                        window.location.href = "{{ route('permissions.index') }}"
+                        window.location.href = "{{ route('posts.index') }}"
                     }, 5000);
                 }).fail(function(data) {
-                    $('#permissionEdit').modal('hide');
+                    $('#postEdit').modal('hide');
                     let errors = JSON.parse(data.responseText);
                     if (errors && errors.message) {
                         showAlertMessage(errors.message, 5000, 'error');
@@ -97,19 +104,19 @@
                         showAlertMessage(errors.message, 5000, 'error');
                     }
                     setTimeout(() => {
-                        window.location.href = "{{ route('permissions.index') }}"
+                        window.location.href = "{{ route('posts.index') }}"
                     }, 5000);
                 });
             })
 
         });
 
-        function editPermission(id, title) {
-            let url = "{{ route('permissions.update', ':id') }}"
+        function editRole(id, title) {
+            let url = "{{ route('posts.update', ':id') }}"
             url = url.replace(':id', `${id}`);
-            $('#form_permission_edit input[name=title]').val(title);
-            $('#form_permission_edit').attr('action', url);
-            $('#permissionEdit').modal('show');
+            $('#form_post_edit input[name=title]').val(title);
+            $('#form_post_edit').attr('action', url);
+            $('#postEdit').modal('show');
         }
     </script>
 @endpush

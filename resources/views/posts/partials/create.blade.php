@@ -1,42 +1,42 @@
  <!-- Modal -->
- <div class="modal fade" id="userEdit" tabindex="-1" aria-labelledby="userEditLabel" aria-hidden="true">
+ <div class="modal fade" id="postCreate" tabindex="-1" aria-labelledby="postCreateLabel" aria-hidden="true">
      <div class="modal-dialog">
          <div class="modal-content">
              <div class="modal-header">
-                 <h5 class="modal-title" id="userEditLabel">User Edit</h5>
+                 <h5 class="modal-title" id="postCreateLabel">Post Create</h5>
                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                      <span aria-hidden="true">&times;</span>
                  </button>
              </div>
              <div class="modal-body">
-                 <form method="post" id="form_user_edit">
+                 <form method="post" action="{{ route('posts.store') }}">
                      @csrf
                      <div class="form-group mb-3">
-                         <input type="text" class="form-control" placeholder="Enter Name" id="name"
-                             name="name">
-                         @error('name')
+                         <input type="string" class="form-control" placeholder="Enter title" id="title"
+                             name="title">
+                         @error('title')
+                             <div class="alert alert-danger mt-1"> {{ $message }} </div>
+                         @enderror
+                     </div>
+                     <div class="form-group mb-30">
+                         <textarea class="form-control" placeholder="Enter body" id="body" name="body"></textarea>
+                         @error('body')
                              <div class="alert alert-danger mt-1"> {{ $message }} </div>
                          @enderror
                      </div>
                      <div class="form-group mb-3">
-                         <input type="text" class="form-control" placeholder="Enter Email" id="email"
-                             name="email">
-                         @error('email')
-                             <div class="alert alert-danger mt-1"> {{ $message }} </div>
-                         @enderror
-                     </div>
-                     <div class="form-group mb-3">
-                         <input type="text" class="form-control" placeholder="Enter Password" id="password"
-                             name="password">
-                         @error('password')
+                         <select class="form-control" placeholder="Enter Stutas" id="status" name="status">
+                             <option value="draft">Draft</option>
+                             <option value="published">Published</option>
+                         </select>
+                         @error('status')
                              <div class="alert alert-danger mt-1"> {{ $message }} </div>
                          @enderror
                      </div>
                      <div class="row">
                          <div class="col-4">
-                             <button type="submit" class="btn btn-primary btn-block">Update</button>
+                             <button type="submit" class="btn btn-primary btn-block">Save</button>
                          </div>
-                         <!-- /.col -->
                      </div>
                  </form>
              </div>

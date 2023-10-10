@@ -9,12 +9,7 @@ class Permission extends Model
 {
     use HasFactory;
 
-    protected $guarded=[
+    protected $guarded = [
         'id'
     ];
-
-    public function permission(){
-        return $this->belongsToMany(Permission::class);
-    }
-   
 }

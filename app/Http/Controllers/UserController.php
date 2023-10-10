@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -35,27 +36,49 @@ class UserController extends Controller
             return to_route('user.index')->with('error', $e->getMessage());
         }
     }
-    function edit($data)
+    function edit($id)
     {
-        $user = User::findOrFail($data);
-        return view("user.edit", compact('user'));
+        $this->authorize('view_post');
+
+        $data['user'] = User::findOrFail($id);
+        $data['roles'] = Role::all();
+        return view("user.edit", $data);
     }
+
     function update(Request $request, $id)
     {
-        $request->validate([
+        $rules = [
             'name' => 'required',
             'email' => 'required',
-            'password' => 'required',
-        ]);
+        ];
+        $request->validate($rules);
+        // return $request->all();
         try {
-            $user = User::findOrFail($id)->update([
+            $user = User::find($id);
+            $user->roles()->sync($request->roles);
+            User::where('id', $id)->update([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => $request->password,
+                'user_id' => auth()->id()
+                // 'password' => $request->password,
             ]);
-            return to_route('user.index')->with('success', 'The User Successfully Created');
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'The user is successfully updated'
+                ]);
+            } else {
+                return to_route('user.index')->with('success', 'The User Successfully Updated');
+            }
         } catch (Exception $e) {
-            return to_route('user.index')->with('error', $e->getMessage());
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => $e->getMessage()
+                ]);
+            } else {
+                return to_route('user.index')->with('error', $e->getMessage());
+            }
         }
     }
     function delete($data)

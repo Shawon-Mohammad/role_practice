@@ -2,6 +2,9 @@
 @section('title')
     Role Create
 @endsection
+@push('css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endpush
 @section('content')
     <div class="container-fluid">
         <div class="row">
@@ -26,6 +29,19 @@
                                     <div class="alert alert-danger mt-1"> {{ $message }} </div>
                                 @enderror
                             </div>
+                            <div class="form-group mb-3">
+                                <label for="permissions">Permissions</label>
+                                <select class="permissions form-control" name="permissions[]" multiple="multiple">
+                                    @foreach ($permissions as $permission)
+                                        <option value="{{ $permission->id }}"
+                                            {{ in_array($permission->id, old('permissions', [])) || $role->permissions->contains($permission->id) ? 'selected' : '' }}>
+                                            {{ $permission->title }}</option>
+                                    @endforeach
+                                </select>
+                                @error('permissions')
+                                    <div class="alert alert-danger mt-1"> {{ $message }} </div>
+                                @enderror
+                            </div>
                             <div class="row">
                                 <div class="col-4">
                                     <button type="submit" class="btn btn-primary btn-block">Update</button>
@@ -38,3 +54,11 @@
         </div>
     </div>
 @endsection
+@push('js')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.permissions').select2();
+        });
+    </script>
+@endpush
