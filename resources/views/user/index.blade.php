@@ -19,6 +19,20 @@
                                 Add New User modal
                             </button>
                         </div>
+                        <form class="form-inline ml-5" action="{{ route('user.index') }}">
+                            @csrf
+                            <div class="row">
+                                <div class="input-group input-group-sm">
+                                    <input class="form-control form-control-navbar" type="search" name="search"
+                                        placeholder="Search" aria-label="Search" value="{{ request()->search }}">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-navbar" type="submit">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div class="card-body table-responsive p-0">
                         <table class="table table-striped table-valign-middle">

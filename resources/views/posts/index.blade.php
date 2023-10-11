@@ -9,6 +9,7 @@
                 <div class="card">
                     <div class="card-header border-0 bg-info">
                         <h3 class="card-title">Posts</h3>
+
                         <div class="card-tools">
                             <a href="{{ route('posts.create') }}" class="btn btn-tool btn-primary bg-primary">
                                 <i class="fas fa-plus"></i>Add New
@@ -19,7 +20,28 @@
                                 Add New Post modal
                             </button>
                         </div>
+                        <form class="form-inline ml-5" action="{{ route('posts.index') }}">
+                            @csrf
+                            <div class="row">
+                                <div class="form-group mb-3">
+                                    <select name="status" class="form-control-sm">
+                                        <option value="draft">Draft</option>
+                                        <option value="published">Published</option>
+                                    </select>
+                                </div>
+                                <div class="input-group input-group-sm">
+                                    <input class="form-control form-control-navbar" type="search" name="search"
+                                        placeholder="Search" aria-label="Search" value="{{ request()->search }}">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-navbar" type="submit">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
+
                     <div class="card-body table-responsive p-0">
                         <table class="table table-striped table-valign-middle">
                             <thead>
@@ -27,6 +49,7 @@
                                     <th>Id</th>
                                     <th>Title</th>
                                     <th>Body</th>
+                                    <th>User_Id</th>
                                     <th>Status</th>
                                     <th>Created at</th>
                                     <th>Updated at</th>
@@ -39,6 +62,7 @@
                                         <td>{{ $post->id }}</td>
                                         <td>{{ $post->title }}</td>
                                         <td>{{ $post->body }}</td>
+                                        <td>{{ $post->user_id }}</td>
                                         <td>{{ $post->status }}</td>
                                         <td>{{ $post->created_at }}</td>
                                         <td>{{ $post->updated_at }}</td>

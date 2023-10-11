@@ -9,13 +9,21 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $roles = Role::all();
+        if($request->has('search') ){
+            $roles = Role::where('title','like','%'.$request->search)
+            // ->orWhere('body','like','%'.$request->search)
+            // ->orWhere('Status','like','%'.$request->search)
+            ->get();
+        }
         return view('roles.index', compact('roles'));
     }
+
     public function create()
     {
+        $this->authorize('add_role');
         return view('roles.create');
     }
     public function store(Request $request)
@@ -34,7 +42,7 @@ class RoleController extends Controller
     }
     function edit($id)
     {
-        $this->authorize('add_role', 'edit_role', 'view_role','delete_role');
+        $this->authorize('edit_role');
 
         $data['role'] = Role::findOrFail($id);
         $data['permissions'] = Permission::all();
@@ -74,6 +82,7 @@ class RoleController extends Controller
 
     function delete($data)
     {
+        $this->authorize('delete_role');
         try {
             Role::findOrFail($data)->delete();
             return to_route('roles.index')->with('success', 'The Role Successfully deleted');

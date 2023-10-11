@@ -9,13 +9,21 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $users = User::all();
+        if($request->has('search') ){
+            $users = User::where('name','like','%'.$request->search)
+            ->orWhere('email','like','%'.$request->search)
+            // ->orWhere('Status','like','%'.$request->search)
+            ->get();
+        }
         return view('user.index', compact('users'));
+
     }
     public function create()
     {
+        $this->authorize('delete_user');
         return view('user.create');
     }
     public function store(Request $request)
@@ -38,7 +46,7 @@ class UserController extends Controller
     }
     function edit($id)
     {
-        $this->authorize('view_post');
+        $this->authorize('view_user');
 
         $data['user'] = User::findOrFail($id);
         $data['roles'] = Role::all();
@@ -83,6 +91,8 @@ class UserController extends Controller
     }
     function delete($data)
     {
+        $this->authorize('delete_user');
+
         try {
             User::findOrFail($data)->delete();
             return to_route('user.index')->with('success', 'The User Successfully deleted');

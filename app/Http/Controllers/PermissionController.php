@@ -8,13 +8,20 @@ use Illuminate\Http\Request;
 
 class PermissionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $permissions = Permission::all();
+        if($request->has('search') ){
+            $permissions = Permission::where('id','like','%'.$request->search)
+            ->orWhere('title','like','%'.$request->search)
+            // ->orWhere('Status','like','%'.$request->search)
+            ->get();
+        }
         return view('permissions.index', compact('permissions'));
     }
     public function create()
     {
+        $this->authorize('delete_permission');
         return view('permissions.create');
     }
     public function store(Request $request)
@@ -33,7 +40,8 @@ class PermissionController extends Controller
     }
     function edit($data)
     {
-        
+        $this->authorize('delete_permission');
+
         $permission = Permission::findOrFail($data);
         return view("permissions.edit", compact('permission'));
     }
@@ -69,6 +77,7 @@ class PermissionController extends Controller
 
     function delete($data)
     {
+        $this->authorize('delete_permission');
         try {
             Permission::findOrFail($data)->delete();
             return to_route('permissions.index')->with('success', 'The Permission Successfully deleted');

@@ -6,15 +6,25 @@ use App\Models\Post;
 use Exception;
 use Illuminate\Http\Request;
 
+use function Laravel\Prompts\search;
+
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $posts = Post::all();
+        if($request->has('search') ){
+            $posts = Post::where('title','like','%'.$request->search)
+            ->orWhere('body','like','%'.$request->search)
+            ->orWhere('Status','like','%'.$request->search)
+            ->get();
+        }
         return view('posts.index', compact('posts'));
+
     }
     public function create()
     {
+        $this->authorize('add_post');
         return view('posts.create');
     }
     public function store(Request $request)
@@ -23,13 +33,14 @@ class PostController extends Controller
             'title' => 'required',
             'body' => 'required',
             'status' => 'required',
-
+            
         ]);
         try {
             $post = Post::create([
                 'title' => $request->title,
                 'body' => $request->body,
                 'status' => $request->status,
+                'user_id' => auth()->id()
             ]);
             return to_route('posts.index')->with('success', 'The Post Successfully Created');
         } catch (Exception $e) {
@@ -38,7 +49,7 @@ class PostController extends Controller
     }
     function edit($data)
     {
-        $this->authorize('edit_post','delete_post');
+        $this->authorize('edit_post');
 
         $post = Post::findOrFail($data);
         return view("posts.edit", compact('post'));
@@ -79,6 +90,7 @@ class PostController extends Controller
 
     function delete($data)
     {
+        $this->authorize('delete_post');
         try {
             Post::findOrFail($data)->delete();
             return to_route('posts.index')->with('success', 'The Post Successfully deleted');
@@ -89,6 +101,7 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        $this->authorize('view_post');
 
         return view("posts.show", compact('post'));
     }

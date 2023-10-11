@@ -32,6 +32,13 @@
                                     <div class="alert alert-danger mt-1"> {{ $message }} </div>
                                 @enderror
                             </div>
+                            {{-- <div class="form-group mb-3">
+                                <input type="integer" class="form-control" placeholder="Enter user_id" id="user_id"
+                                    name="user_id">
+                                @error('user_id')
+                                    <div class="alert alert-danger mt-1"> {{ $message }} </div>
+                                @enderror
+                            </div> --}}
                             <div class="form-group mb-3">
                                 <select class="form-control" placeholder="Enter Stutas" id="status" name="status">
                                     <option value="draft">Draft</option>

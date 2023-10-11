@@ -19,6 +19,20 @@
                                 Add New Permission modal
                             </button>
                         </div>
+                        <form class="form-inline ml-5" action="{{ route('permissions.index') }}">
+                            @csrf
+                            <div class="row">
+                                <div class="input-group input-group-sm">
+                                    <input class="form-control form-control-navbar" type="search" name="search"
+                                        placeholder="Search" aria-label="Search" value="{{ request()->search }}">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-navbar" type="submit">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <div class="card-body table-responsive p-0">
                         <table class="table table-striped table-valign-middle">
@@ -39,7 +53,7 @@
                                         <td>{{ $permission->created_at }}</td>
                                         <td>{{ $permission->updated_at }}</td>
                                         <td>
-                                            @can(edit_permission)
+                                            @can('edit_permission')
                                                 <a class="btn btn-success"
                                                     href="{{ route('permissions.edit', $permission->id) }}">Edit</a>
                                                 <button type="button" class="btn btn-tool btn-primary bg-primary"
@@ -47,7 +61,7 @@
                                                     Edit Modal
                                                 </button>
                                             @endcan
-                                            @can(delete_permission)
+                                            @can('delete_permission')
                                                 <a class="btn btn-danger"
                                                     href="{{ route('permissions.delete', $permission->id) }}">Delete</a>
                                             @endcan
