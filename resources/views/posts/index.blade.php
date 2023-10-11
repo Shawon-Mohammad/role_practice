@@ -25,9 +25,27 @@
                             <div class="row">
                                 <div class="form-group mb-3">
                                     <select name="status" class="form-control-sm">
-                                        <option value="draft"{{request()->status =='draft' ? 'selected' : ''}}>Draft</option>
-                                        <option value="published"{{request()->status =='published' ? 'selected' : ''}}>Published</option>
+                                        <option value="draft"{{ request()->status == 'draft' ? 'selected' : '' }}>Draft
+                                        </option>
+                                        <option value="published"{{ request()->status == 'published' ? 'selected' : '' }}>
+                                            Published</option>
                                     </select>
+                                </div>
+                                <div class="input-group date" id="from_date" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" name="from_date"
+                                        data-target="#from_date"value="{{request()->from_date}}">
+                                    <div class="input-group-append" data-target="#from_date"
+                                        data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                                <div class="input-group date" id="to_date" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" name="to_date"
+                                        data-target="#to_date" value="{{request()->to_date}}">
+                                    <div class="input-group-append" data-target="#to_date"
+                                        data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
                                 </div>
                                 <div class="input-group input-group-sm">
                                     <input class="form-control form-control-navbar" type="search" name="search"
@@ -99,6 +117,13 @@
 @push('js')
     <script>
         $(document).ready(function() {
+            //Date picker
+            $('#from_date').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('#to_date').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
             $(document).on('submit', 'form#form_post_edit', function(e) {
                 e.preventDefault();
                 let form = $(this);

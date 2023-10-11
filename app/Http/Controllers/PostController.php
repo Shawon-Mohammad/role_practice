@@ -21,7 +21,11 @@ class PostController extends Controller
         if($request->filled('status') ){
             $posts = $posts->where('status',$request->status);
         }
-        $posts=$posts->paginate(1);
+        if($request->filled('from_date') && $request->filled('to_date') ){
+            $posts = $posts->whereDate('created_at','>',$request->from_date)
+            ->whereDate('created_at','<',$request->to_date);
+        }
+        $posts=$posts->paginate(5);
         return view('posts.index', compact('posts'));
 
     }
