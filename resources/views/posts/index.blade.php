@@ -80,7 +80,7 @@
                                         <td>{{ $post->id }}</td>
                                         <td>{{ $post->title }}</td>
                                         <td>{{ $post->body }}</td>
-                                        <td>{{ $post->user_id }}</td>
+                                        <td>{{ $post->user->name }}</td>
                                         <td>{{ $post->status }}</td>
                                         <td>{{ $post->created_at }}</td>
                                         <td>{{ $post->updated_at }}</td>
