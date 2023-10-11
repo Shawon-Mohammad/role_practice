@@ -21,7 +21,7 @@ class PostController extends Controller
         if($request->filled('status') ){
             $posts = $posts->where('status',$request->status);
         }
-        $posts=$posts->get();
+        $posts=$posts->paginate(1);
         return view('posts.index', compact('posts'));
 
     }
