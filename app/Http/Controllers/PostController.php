@@ -12,13 +12,16 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
-        $posts = Post::all();
-        if($request->has('search') ){
-            $posts = Post::where('title','like','%'.$request->search)
-            ->orWhere('body','like','%'.$request->search)
-            ->orWhere('Status','like','%'.$request->search)
-            ->get();
+        // return $request->all();
+        $posts = Post::query();
+        if($request->filled('search') ){
+            $posts = $posts->where('title','like','%'.$request->search)
+            ->orWhere('body','like','%'.$request->search);
         }
+        if($request->filled('status') ){
+            $posts = $posts->where('status',$request->status);
+        }
+        $posts=$posts->get();
         return view('posts.index', compact('posts'));
 
     }
@@ -33,7 +36,7 @@ class PostController extends Controller
             'title' => 'required',
             'body' => 'required',
             'status' => 'required',
-            
+
         ]);
         try {
             $post = Post::create([

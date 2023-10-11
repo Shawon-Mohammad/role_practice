@@ -25,8 +25,8 @@
                             <div class="row">
                                 <div class="form-group mb-3">
                                     <select name="status" class="form-control-sm">
-                                        <option value="draft">Draft</option>
-                                        <option value="published">Published</option>
+                                        <option value="draft"{{request()->status =='draft' ? 'selected' : ''}}>Draft</option>
+                                        <option value="published"{{request()->status =='published' ? 'selected' : ''}}>Published</option>
                                     </select>
                                 </div>
                                 <div class="input-group input-group-sm">
