@@ -39,6 +39,14 @@
                             </tr>
                             <tr>
                                 <th>
+                                    User name
+                                </th>
+                                <td>
+                                    {{ $post->user->name }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
                                     Status
                                 </th>
                                 <td>

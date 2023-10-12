@@ -22,6 +22,7 @@
                         <form class="form-inline ml-5" action="{{ route('permissions.index') }}">
                             @csrf
                             <div class="row">
+
                                 <div class="input-group input-group-sm">
                                     <input class="form-control form-control-navbar" type="search" name="search"
                                         placeholder="Search" aria-label="Search" value="{{ request()->search }}">
@@ -29,6 +30,20 @@
                                         <button class="btn btn-navbar" type="submit">
                                             <i class="fas fa-search"></i>
                                         </button>
+                                    </div>
+                                </div>
+                                <div class="input-group date" id="from_date" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" name="from_date"
+                                        data-target="#from_date"value="{{ request()->from_date }}">
+                                    <div class="input-group-append" data-target="#from_date" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                                <div class="input-group date" id="to_date" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" name="to_date"
+                                        data-target="#to_date" value="{{ request()->to_date }}">
+                                    <div class="input-group-append" data-target="#to_date" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
                                 </div>
                             </div>
@@ -70,6 +85,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        {{ $permissions->links() }}
                     </div>
                 </div>
             </div>
@@ -81,6 +97,12 @@
 @push('js')
     <script>
         $(document).ready(function() {
+            $('#from_date').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('#to_date').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
             $(document).on('submit', 'form#form_permission_edit', function(e) {
                 e.preventDefault();
                 let form = $(this);

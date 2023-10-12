@@ -12,7 +12,6 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
-        // return $request->all();
         $posts = Post::query();
         if($request->filled('search') ){
             $posts = $posts->where('title','like','%'.$request->search)
@@ -26,6 +25,7 @@ class PostController extends Controller
             ->whereDate('created_at','<',$request->to_date);
         }
         $posts=$posts->paginate(5);
+        
         return view('posts.index', compact('posts'));
 
     }

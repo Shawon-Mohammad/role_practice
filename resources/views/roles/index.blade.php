@@ -31,6 +31,20 @@
                                         </button>
                                     </div>
                                 </div>
+                                <div class="input-group date" id="from_date" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" name="from_date"
+                                        data-target="#from_date"value="{{ request()->from_date }}">
+                                    <div class="input-group-append" data-target="#from_date" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                                <div class="input-group date" id="to_date" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" name="to_date"
+                                        data-target="#to_date" value="{{ request()->to_date }}">
+                                    <div class="input-group-append" data-target="#to_date" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -69,6 +83,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        {{ $roles->links() }}
                     </div>
                 </div>
             </div>
@@ -80,6 +95,12 @@
 @push('js')
     <script>
         $(document).ready(function() {
+            $('#from_date').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('#to_date').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
             $(document).on('submit', 'form#form_role_edit', function(e) {
                 e.preventDefault();
                 let form = $(this);

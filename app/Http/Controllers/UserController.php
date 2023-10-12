@@ -11,16 +11,18 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $users = User::all();
-        if($request->has('search') ){
-            $users = User::where('name','like','%'.$request->search)
-            ->orWhere('email','like','%'.$request->search)
-            // ->orWhere('Status','like','%'.$request->search)
-            ->get();
+        $users = User::query();
+        if($request->filled('search') ){
+            $users = $users->where('title','like','%'.$request->search);
         }
+        if($request->filled('from_date') && $request->filled('to_date') ){
+            $users = $users->whereDate('created_at','>',$request->from_date)
+            ->whereDate('created_at','<',$request->to_date);
+        }
+        $users=$users->paginate(1);
+        
         return view('user.index', compact('users'));
-
-    }
+        }
     public function create()
     {
         $this->authorize('delete_user');

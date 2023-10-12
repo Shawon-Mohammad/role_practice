@@ -10,13 +10,15 @@ class PermissionController extends Controller
 {
     public function index(Request $request)
     {
-        $permissions = Permission::all();
-        if($request->has('search') ){
-            $permissions = Permission::where('id','like','%'.$request->search)
-            ->orWhere('title','like','%'.$request->search)
-            // ->orWhere('Status','like','%'.$request->search)
-            ->get();
+        $permissions = Permission::query();
+        if($request->filled('search') ){
+            $permissions = $permissions->where('title','like','%'.$request->search);
         }
+        if($request->filled('from_date') && $request->filled('to_date') ){
+            $permissions = $permissions->whereDate('created_at','>',$request->from_date)
+            ->whereDate('created_at','<',$request->to_date);
+        }
+        $permissions=$permissions->paginate(5);
         return view('permissions.index', compact('permissions'));
     }
     public function create()

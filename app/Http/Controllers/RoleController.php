@@ -11,15 +11,18 @@ class RoleController extends Controller
 {
     public function index(Request $request)
     {
-        $roles = Role::all();
-        if($request->has('search') ){
-            $roles = Role::where('title','like','%'.$request->search)
-            // ->orWhere('body','like','%'.$request->search)
-            // ->orWhere('Status','like','%'.$request->search)
-            ->get();
+        $roles = Role::query();
+        if($request->filled('search') ){
+            $roles = $roles->where('title','like','%'.$request->search);
         }
+        if($request->filled('from_date') && $request->filled('to_date') ){
+            $roles = $roles->whereDate('created_at','>',$request->from_date)
+            ->whereDate('created_at','<',$request->to_date);
+        }
+        $roles=$roles->paginate(1);
+        
         return view('roles.index', compact('roles'));
-    }
+        }
 
     public function create()
     {

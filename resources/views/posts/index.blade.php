@@ -67,7 +67,7 @@
                                     <th>Id</th>
                                     <th>Title</th>
                                     <th>Body</th>
-                                    <th>User_Id</th>
+                                    <th>User_name</th>
                                     <th>Status</th>
                                     <th>Created at</th>
                                     <th>Updated at</th>
