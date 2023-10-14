@@ -2,6 +2,16 @@
 @section('title')
     Post
 @endsection
+@push('css')
+    <style>
+        @media print {
+            .print-none{
+                display: none;
+
+            }
+        }
+    </style>
+@endpush
 @section('content')
     <div class="container-fluid">
         <div class="row">
@@ -75,6 +85,7 @@
             </div>
         </div>
     </div>
+    <button onclick="window.print()" class="btn btn-success print-none">Print</button>
 @endsection
 @push('js')
     <script></script>
