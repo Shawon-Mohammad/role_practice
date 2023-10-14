@@ -33,17 +33,15 @@
                                 </div>
                                 <div class="input-group date" id="from_date" data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input" name="from_date"
-                                        data-target="#from_date"value="{{request()->from_date}}">
-                                    <div class="input-group-append" data-target="#from_date"
-                                        data-toggle="datetimepicker">
+                                        data-target="#from_date"value="{{ request()->from_date }}">
+                                    <div class="input-group-append" data-target="#from_date" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
                                 </div>
                                 <div class="input-group date" id="to_date" data-target-input="nearest">
                                     <input type="text" class="form-control datetimepicker-input" name="to_date"
-                                        data-target="#to_date" value="{{request()->to_date}}">
-                                    <div class="input-group-append" data-target="#to_date"
-                                        data-toggle="datetimepicker">
+                                        data-target="#to_date" value="{{ request()->to_date }}">
+                                    <div class="input-group-append" data-target="#to_date" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                     </div>
                                 </div>
@@ -60,8 +58,8 @@
                         </form>
                     </div>
 
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-striped table-valign-middle">
+                    <div class="card-body table-responsive p-0 pt-4">
+                        {{-- <table id="posts_table" class="table table-striped table-valign-middle">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -73,8 +71,9 @@
                                     <th>Updated at</th>
                                     <th>Action</th>
                                 </tr>
-                            </thead>
-                            <tbody>
+                            </thead> --}}
+                            {{ $dataTable->table() }}
+                            {{-- <tbody>
                                 @foreach ($posts as $post)
                                     <tr>
                                         <td>{{ $post->id }}</td>
@@ -103,9 +102,9 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                            </tbody>
-                        </table>
-                        {{ $posts->links() }}
+                            </tbody> --}}
+                        {{-- </table> --}}
+                        {{-- {{ $posts->links() }} --}}
                     </div>
                 </div>
             </div>
@@ -115,9 +114,25 @@
     @include('posts.partials.edit')
 @endsection
 @push('js')
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
     <script>
         $(document).ready(function() {
-            //Date picker
+            // new DataTable('#posts_table', {
+            //     order: [
+            //         [1, 'asc']
+            //     ],
+
+            //     stateSave: true
+            //     // paging: false,
+            //     // scrollCollapse: true,
+            //     // scrollY: '200px'
+
+            //     // info: false,
+            //     // ordering: false,
+            //     // paging: false
+
+            // });
+
             $('#from_date').datetimepicker({
                 format: 'YYYY-MM-DD'
             });

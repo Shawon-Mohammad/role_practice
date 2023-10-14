@@ -48,8 +48,8 @@
                             </div>
                         </form>
                     </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-striped table-valign-middle">
+                    <div class="card-body table-responsive p-0 pt-4">
+                        {{-- <table class="table table-striped table-valign-middle">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -59,8 +59,9 @@
                                     <th>Updated at</th>
                                     <th>Action</th>
                                 </tr>
-                            </thead>
-                            <tbody>
+                            </thead> --}}
+                        {{ $dataTable->table() }}
+                        {{-- <tbody>
                                 @foreach ($users as $user)
                                     <tr>
                                         <td>{{ $user->id }}</td>
@@ -84,8 +85,8 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                        </table>
-                        {{ $users->links() }}
+                        </table> --}}
+                        {{-- {{ $users->links() }} --}}
                     </div>
                 </div>
             </div>
@@ -95,6 +96,7 @@
     @include('user.partials.edit')
 @endsection
 @push('js')
+    {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
     <script>
         $(document).ready(function() {
             $('#from_date').datetimepicker({

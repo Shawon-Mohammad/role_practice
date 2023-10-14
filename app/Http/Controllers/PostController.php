@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\PostsDataTable;
 use App\Models\Post;
 use Exception;
 use Illuminate\Http\Request;
@@ -10,25 +11,30 @@ use function Laravel\Prompts\search;
 
 class PostController extends Controller
 {
-    public function index(Request $request)
-    {
-        $posts = Post::query();
-        if($request->filled('search') ){
-            $posts = $posts->where('title','like','%'.$request->search)
-            ->orWhere('body','like','%'.$request->search);
-        }
-        if($request->filled('status') ){
-            $posts = $posts->where('status',$request->status);
-        }
-        if($request->filled('from_date') && $request->filled('to_date') ){
-            $posts = $posts->whereDate('created_at','>',$request->from_date)
-            ->whereDate('created_at','<',$request->to_date);
-        }
-        $posts=$posts->paginate(5);
-        
-        return view('posts.index', compact('posts'));
+    // public function index(Request $request)
+    // {
+    //     $posts = Post::query();
+    //     if($request->filled('search') ){
+    //         $posts = $posts->where('title','like','%'.$request->search)
+    //         ->orWhere('body','like','%'.$request->search);
+    //     }
+    //     if($request->filled('status') ){
+    //         $posts = $posts->where('status',$request->status);
+    //     }
+    //     if($request->filled('from_date') && $request->filled('to_date') ){
+    //         $posts = $posts->whereDate('created_at','>',$request->from_date)
+    //         ->whereDate('created_at','<',$request->to_date);
+    //     }
+    //     $posts=$posts->paginate(100);
+
+    //     return view('posts.index', compact('posts'));
+
+    // }
+    public function index(PostsDataTable $dataTable){
+        return $dataTable->render('posts.index');
 
     }
+
     public function create()
     {
         $this->authorize('add_post');

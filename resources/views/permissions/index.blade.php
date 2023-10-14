@@ -50,7 +50,7 @@
                         </form>
                     </div>
                     <div class="card-body table-responsive p-0">
-                        <table class="table table-striped table-valign-middle">
+                        {{-- <table class="table table-striped table-valign-middle">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -59,8 +59,9 @@
                                     <th>Updated at</th>
                                     <th>Action</th>
                                 </tr>
-                            </thead>
-                            <tbody>
+                            </thead> --}}
+                            {{ $dataTable->table() }}
+                            {{-- <tbody>
                                 @foreach ($permissions as $permission)
                                     <tr>
                                         <td>{{ $permission->id }}</td>
@@ -84,8 +85,8 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-                        </table>
-                        {{ $permissions->links() }}
+                        </table> --}}
+                        {{-- {{ $permissions->links() }} --}}
                     </div>
                 </div>
             </div>
@@ -95,6 +96,7 @@
     @include('permissions.partials.create')
 @endsection
 @push('js')
+{{ $dataTable->scripts(attributes: ['type' => 'module']) }}
     <script>
         $(document).ready(function() {
             $('#from_date').datetimepicker({

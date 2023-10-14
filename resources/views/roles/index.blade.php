@@ -48,8 +48,8 @@
                             </div>
                         </form>
                     </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-striped table-valign-middle">
+                    <div class="card-body table-responsive p-0 pt-4">
+                        <table id="roles_table" class="table table-striped table-valign-middle">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -83,7 +83,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        {{ $roles->links() }}
+                        {{-- {{ $roles->links() }} --}}
                     </div>
                 </div>
             </div>
@@ -95,6 +95,11 @@
 @push('js')
     <script>
         $(document).ready(function() {
+            new DataTable('#roles_table', {
+                order: [
+                    [0, 'asc']
+                ],
+            });
             $('#from_date').datetimepicker({
                 format: 'YYYY-MM-DD'
             });

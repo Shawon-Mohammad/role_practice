@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\UsersDataTable;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
@@ -9,20 +10,26 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
-    {
-        $users = User::query();
-        if($request->filled('search') ){
-            $users = $users->where('title','like','%'.$request->search);
+    // public function index(Request $request)
+    // {
+    //     $users = User::query();
+    //     if($request->filled('search') ){
+    //         $users = $users->where('title','like','%'.$request->search);
+    //     }
+    //     if($request->filled('from_date') && $request->filled('to_date') ){
+    //         $users = $users->whereDate('created_at','>',$request->from_date)
+    //         ->whereDate('created_at','<',$request->to_date);
+    //     }
+    //     $users=$users->paginate(1);
+
+    //     return view('user.index', compact('users'));
+    //     }
+
+        public function index(UsersDataTable $dataTable){
+            return $dataTable->render('user.index');
+
         }
-        if($request->filled('from_date') && $request->filled('to_date') ){
-            $users = $users->whereDate('created_at','>',$request->from_date)
-            ->whereDate('created_at','<',$request->to_date);
-        }
-        $users=$users->paginate(1);
-        
-        return view('user.index', compact('users'));
-        }
+
     public function create()
     {
         $this->authorize('delete_user');
